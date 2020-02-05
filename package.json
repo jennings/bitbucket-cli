@@ -1,0 +1,16 @@
+{
+  "name": "bitbucket-cli",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "Stephen Jennings",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@types/node": "^13.7.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.7.5"
+  }
+}
