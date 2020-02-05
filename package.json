@@ -5,12 +5,14 @@
   "author": "Stephen Jennings",
   "license": "MIT",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "start": "ts-node src/index.ts"
   },
   "dependencies": {
     "@types/node": "^13.7.0"
   },
   "devDependencies": {
+    "ts-node": "^8.6.2",
     "typescript": "^3.7.5"
   }
 }
