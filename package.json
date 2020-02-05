@@ -4,11 +4,15 @@
   "main": "index.js",
   "author": "Stephen Jennings",
   "license": "MIT",
+  "bin": {
+    "bb": "./dist/index.js"
+  },
   "scripts": {
     "build": "tsc",
     "start": "ts-node src/index.ts"
   },
   "dependencies": {
+    "@types/inquirer": "^6.5.0",
     "@types/node": "^13.7.0",
     "commander": "^4.1.1"
   },
