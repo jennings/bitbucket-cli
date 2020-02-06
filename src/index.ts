@@ -4,7 +4,9 @@ import commander from "commander";
 import inquirer from "inquirer";
 import { bitbucket, getCurrentRepo } from "./bitbucket";
 
-commander
+const program = new commander.Command();
+
+program
   .command("checkout [pr]")
   .description("checkout a remote branch")
   .action(async (pr: string, cmd: unknown) => {
@@ -56,4 +58,4 @@ commander
     }
   });
 
-commander.parseAsync(process.argv);
+program.parseAsync(process.argv);
