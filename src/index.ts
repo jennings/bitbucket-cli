@@ -1,61 +1,26 @@
 import * as process from "process";
-import * as child_process from "child_process";
-import commander from "commander";
-import inquirer from "inquirer";
-import { bitbucket, getCurrentRepo } from "./bitbucket";
+import { Command } from "commander";
+import { createCommands } from "./commands";
 
-const program = new commander.Command();
+const program = new Command();
 
 program
-  .command("checkout [pr]")
-  .description("checkout a remote branch")
-  .action(async (pr: string, cmd: unknown) => {
-    if (pr != null) {
-      console.log(pr, typeof pr);
-    } else {
-      const repo = await getCurrentRepo();
-      if (repo == null) {
-        throw Error("Not in a git repository");
-      }
-      const response = await bitbucket.pullrequests.list({
-        ...repo,
-        state: "OPEN"
-      });
+  .option(
+    "-w, --workspace <workspace>",
+    "Bitbucket workspace (user/orgranization)"
+  )
+  .option("-r, --repo <repo_slug>", "Bitbucket repository slug");
 
-      const openPullRequests = response.data.values!;
-
-      await inquirer
-        .prompt([
-          {
-            type: "list",
-            name: "pr",
-            message: "Which pull request?",
-            choices: openPullRequests.map(pr => ({
-              name: pr.title,
-              value: pr.id
-            }))
-          }
-        ])
-        .then(({ pr }: any) => {
-          const pullRequest = openPullRequests.find(req => req.id === pr);
-          if (pullRequest == null) {
-            throw Error(`Could not find pull request: ${pr}`);
-          }
-
-          const branch = pullRequest.source && pullRequest.source.branch;
-          if (branch == null || branch.name == null) {
-            throw Error(
-              `Pull request does not have a branchName: ${branch &&
-                branch.name}`
-            );
-          }
-
-          child_process.spawn("git", ["checkout", branch.name], {
-            shell: true,
-            stdio: "inherit"
-          });
-        });
-    }
+program
+  .command("snippet create <filename>")
+  .description("create a snippet from a file")
+  .action(async (filename: string) => {
+    throw Error("not implemented");
   });
 
-program.parseAsync(process.argv);
+createCommands(program);
+
+program.parseAsync(process.argv).catch((err: Error) => {
+  console.log(err);
+  process.exit(1);
+});

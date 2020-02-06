@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "build:watch": "tsc --watch",
     "start": "ts-node src/index.ts"
   },
   "dependencies": {
