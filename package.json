@@ -14,6 +14,7 @@
   "dependencies": {
     "@types/inquirer": "^6.5.0",
     "@types/node": "^13.7.0",
+    "bitbucket": "^2.0.2",
     "commander": "^4.1.1"
   },
   "devDependencies": {
