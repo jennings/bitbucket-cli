@@ -33,7 +33,7 @@ export function createPrCommand(program: Command) {
             .prompt([
               {
                 type: "list",
-                name: "pr",
+                name: "pr_id",
                 message: "Which pull request?",
                 choices: openPullRequests.map(pr => ({
                   name: pr.title,
@@ -41,15 +41,13 @@ export function createPrCommand(program: Command) {
                 }))
               }
             ])
-            .then(({ pr }: any) => {
-              const pullRequest = openPullRequests.find(
-                pr => pr.id === pr_number
-              );
+            .then(({ pr_id }: any) => {
+              const pullRequest = openPullRequests.find(p => p.id === pr_id);
               if (pullRequest == null) {
-                throw Error(`Could not find pull request: ${pr_number}`);
+                throw Error(`Could not find pull request: ${pr_id}`);
               }
 
-              checkoutPullRequest(pr);
+              checkoutPullRequest(pullRequest);
             });
         }
 
