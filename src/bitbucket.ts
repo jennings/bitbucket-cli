@@ -20,7 +20,8 @@ export const bitbucket = new Bitbucket({
   auth: {
     username: bitbucketConfig.username,
     password: bitbucketConfig.password
-  }
+  },
+  notice: false
 });
 
 interface BitbucketRepository {
