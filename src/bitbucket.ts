@@ -1,8 +1,8 @@
 import * as process from "process";
-import * as child_process from "child_process";
 import * as fs from "fs";
 import * as path from "path";
 import { Bitbucket } from "bitbucket";
+import { getRemote } from "./git";
 
 const configPath = path.join(
   process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE || ".",
@@ -23,22 +23,15 @@ export const bitbucket = new Bitbucket({
   }
 });
 
-export async function getCurrentRepo() {
-  const url = await new Promise<string>((resolve, reject) => {
-    const proc = child_process.spawn("git", ["remote", "get-url", "origin"], {
-      shell: true,
-      stdio: "pipe"
-    });
-    let data = "";
-    proc.stdout.on("data", read => {
-      data += read;
-    });
-    proc.on("close", (code: number) => {
-      resolve(data);
-    });
-  });
+interface BitbucketRepository {
+  workspace: string;
+  repo_slug: string;
+}
 
-  const match = url.match(/bitbucket\.org[:\/](\w+)\/([^\/\s]+)/);
+export async function getCurrentRepo(): Promise<BitbucketRepository | null> {
+  const remote = await getRemote("origin");
+
+  const match = remote.url.match(/bitbucket\.org[:\/](\w+)\/([^\/\s]+)/);
   if (match) {
     const workspace = match[1];
     const repo_slug = match[2].replace(".git", "");

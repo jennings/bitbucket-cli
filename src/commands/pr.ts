@@ -1,4 +1,4 @@
-import * as child_process from "child_process";
+import { spawn } from "child_process";
 import { Command } from "commander";
 import inquirer from "inquirer";
 import { bitbucket, getCurrentRepo } from "../bitbucket";
@@ -7,6 +7,7 @@ import { Schema } from "bitbucket";
 export function createPrCommand(program: Command) {
   program
     .command("pr:checkout [pr_number]")
+    .alias("pr")
     .description("checkout a pull request branch")
     .action(
       async (pr_number: string | null, branch: string | null, cmd: Command) => {
@@ -60,7 +61,7 @@ export function createPrCommand(program: Command) {
             );
           }
 
-          child_process.spawn("git", ["checkout", branch.name], {
+          spawn("git", ["checkout", branch.name], {
             shell: true,
             stdio: "inherit"
           });
