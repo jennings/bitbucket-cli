@@ -15,13 +15,13 @@ export const bitbucket = new Bitbucket({
   baseUrl: "https://api.bitbucket.org/2.0",
   headers: {},
   options: {
-    timeout: 10
+    timeout: 10,
   },
   auth: {
     username: bitbucketConfig.username,
-    password: bitbucketConfig.password
+    password: bitbucketConfig.password,
   },
-  notice: false
+  notice: false,
 });
 
 interface BitbucketRepository {
@@ -38,7 +38,7 @@ export async function getCurrentRepo(): Promise<BitbucketRepository | null> {
     const repo_slug = match[2].replace(".git", "");
     return {
       workspace,
-      repo_slug
+      repo_slug,
     };
   }
 

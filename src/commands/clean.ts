@@ -24,8 +24,8 @@ export function createCleanCommand(program: Command) {
             type: "checkbox",
             name: "branches",
             message: "Which branches to delete?",
-            choices: mergedBranches
-          }
+            choices: mergedBranches,
+          },
         ])
         .then(({ branches }: any) => {
           deleteBranches(branches);
