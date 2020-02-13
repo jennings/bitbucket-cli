@@ -4,6 +4,11 @@ import * as path from "path";
 import { Bitbucket } from "bitbucket";
 import { getRemote } from "./git";
 
+export interface Repository {
+  workspace: string;
+  repo_slug: string;
+}
+
 const configPath = path.join(
   process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE || ".",
   ".bitbucketrc"
@@ -24,12 +29,7 @@ export const bitbucket = new Bitbucket({
   notice: false,
 });
 
-interface BitbucketRepository {
-  workspace: string;
-  repo_slug: string;
-}
-
-export async function getCurrentRepo(): Promise<BitbucketRepository | null> {
+export async function getCurrentRepo(): Promise<Repository | null> {
   const remote = await getRemote("origin");
 
   const match = remote.url.match(/bitbucket\.org[:\/](\w+)\/([^\/\s]+)/);
