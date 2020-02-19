@@ -16,6 +16,11 @@ Then run `bb init` to create a config file.
 
 ## Commands
 
+### `bb pr:status [id]`
+
+Displays the status of a given pull request ID. If the pull request ID is not
+specified, offers a list of open pull requests.
+
 ### `bb pr:checkout [id]`
 
 Checks out the branch for the given pull request ID. If the pull request ID

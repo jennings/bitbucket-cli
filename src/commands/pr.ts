@@ -10,8 +10,25 @@ import { Schema } from "bitbucket";
 
 export function createPrCommand(program: Command) {
   program
-    .command("pr:checkout [pr_number]")
+    .command("pr:status [id]")
     .alias("pr")
+    .description("view the status of a pull request")
+    .action(async (id: string | null) => {
+      const repo = await getCurrentRepo();
+      if (repo == null) {
+        throw Error("Not in a git repository");
+      }
+
+      const pr_id = (id && parseInt(id)) || null;
+      const pullRequest = await getPullRequestByIdOrSelection(repo, pr_id);
+      console.log(`Title:        ${pullRequest.title}`);
+      console.log(`State:        ${pullRequest.state}`);
+      console.log(`Branch:       ${pullRequest.source?.branch?.name}`);
+      console.log(`Description:  ${pullRequest.description}`);
+    });
+
+  program
+    .command("pr:checkout [id]")
     .description("checkout a pull request branch")
     .action(async (id: string | null) => {
       const repo = await getCurrentRepo();
