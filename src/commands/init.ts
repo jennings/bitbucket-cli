@@ -22,7 +22,7 @@ export function createInitCommand(program: Command) {
 
       const { password } = await inquirer.prompt([
         {
-          type: "text",
+          type: "password",
           name: "password",
           message: 'App password with the "Pull Requests: Read" permission:',
         },
