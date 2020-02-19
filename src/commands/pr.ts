@@ -13,14 +13,14 @@ export function createPrCommand(program: Command) {
     .command("pr:checkout [pr_number]")
     .alias("pr")
     .description("checkout a pull request branch")
-    .action(async (pr_number: string | null) => {
+    .action(async (id: string | null) => {
       const repo = await getCurrentRepo();
       if (repo == null) {
         throw Error("Not in a git repository");
       }
 
-      const id = (pr_number && parseInt(pr_number)) || null;
-      const pullRequest = await getPullRequestByIdOrSelection(repo, id);
+      const pr_id = (id && parseInt(id)) || null;
+      const pullRequest = await getPullRequestByIdOrSelection(repo, pr_id);
       checkoutPullRequest(pullRequest);
     });
 }
