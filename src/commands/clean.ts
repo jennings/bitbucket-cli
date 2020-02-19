@@ -1,9 +1,7 @@
-import { spawn } from "child_process";
 import { Command } from "commander";
 import inquirer from "inquirer";
-import { bitbucket, getCurrentRepo } from "../bitbucket";
+import { getCurrentRepo } from "../bitbucket";
 import { getMergedBranches, deleteBranches } from "../git";
-import { Schema } from "bitbucket";
 
 export function createCleanCommand(program: Command) {
   program

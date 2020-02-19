@@ -1,33 +1,34 @@
 import * as process from "process";
 import * as fs from "fs";
 import * as path from "path";
-import { Bitbucket } from "bitbucket";
+import { Bitbucket, APIClient } from "bitbucket";
 import { getRemote } from "./git";
+import { readSettings } from "./settings";
 
 export interface Repository {
   workspace: string;
   repo_slug: string;
 }
 
-const configPath = path.join(
-  process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE || ".",
-  ".bitbucketrc"
-);
-const file = fs.readFileSync(configPath);
-const bitbucketConfig: any = JSON.parse(file.toString());
+export async function createBitbucketClient(): Promise<APIClient> {
+  const bitbucketConfig = await readSettings();
+  if (!bitbucketConfig) {
+    throw Error("Unable to read settings");
+  }
 
-export const bitbucket = new Bitbucket({
-  baseUrl: "https://api.bitbucket.org/2.0",
-  headers: {},
-  options: {
-    timeout: 10,
-  },
-  auth: {
-    username: bitbucketConfig.username,
-    password: bitbucketConfig.password,
-  },
-  notice: false,
-});
+  return new Bitbucket({
+    baseUrl: "https://api.bitbucket.org/2.0",
+    headers: {},
+    options: {
+      timeout: 10,
+    },
+    auth: {
+      username: bitbucketConfig.username,
+      password: bitbucketConfig.password,
+    },
+    notice: false,
+  });
+}
 
 export async function getCurrentRepo(): Promise<Repository | null> {
   const remote = await getRemote("origin");

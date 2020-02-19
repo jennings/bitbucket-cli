@@ -1,7 +1,11 @@
 import { spawn } from "child_process";
 import { Command } from "commander";
 import inquirer from "inquirer";
-import { bitbucket, getCurrentRepo, Repository } from "../bitbucket";
+import {
+  createBitbucketClient,
+  getCurrentRepo,
+  Repository,
+} from "../bitbucket";
 import { Schema } from "bitbucket";
 
 export function createPrCommand(program: Command) {
@@ -48,6 +52,7 @@ async function getPullRequestbyId(
   repo: Repository,
   id: number
 ): Promise<Schema.Pullrequest> {
+  const bitbucket = await createBitbucketClient();
   const response = await bitbucket.pullrequests.get({
     ...repo,
     pull_request_id: id,
@@ -61,6 +66,7 @@ async function getPullRequestsByState(
   repo: Repository,
   state: PullRequestState
 ): Promise<Schema.Pullrequest[]> {
+  const bitbucket = await createBitbucketClient();
   const response = await bitbucket.pullrequests.list({
     ...repo,
     state,
