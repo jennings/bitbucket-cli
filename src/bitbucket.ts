@@ -2,7 +2,7 @@ import * as process from "process";
 import * as fs from "fs";
 import * as path from "path";
 import { Bitbucket, APIClient } from "bitbucket";
-import { getRemote } from "./git";
+import { getRemote, Remote } from "./git";
 import { readSettings } from "./settings";
 
 export interface Repository {
@@ -30,9 +30,14 @@ export async function createBitbucketClient(): Promise<APIClient> {
   });
 }
 
-export async function getCurrentRepo(): Promise<Repository | null> {
-  const remote = await getRemote("origin");
+export async function getCurrentRepo(
+  remoteName: string = "origin"
+): Promise<Repository | null> {
+  const remote = await getRemote(remoteName);
+  return parseBitbucketUrl(remote);
+}
 
+export function parseBitbucketUrl(remote: Remote): Repository | null {
   const match = remote.url.match(/bitbucket\.org[:\/](\w+)\/([^\/\s]+)/);
   if (match) {
     const workspace = match[1];

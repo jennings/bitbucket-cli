@@ -7,6 +7,7 @@ import {
   Repository,
 } from "../bitbucket";
 import { Schema } from "bitbucket";
+import open from "open";
 
 export function createPrCommand(program: Command) {
   program
@@ -25,6 +26,34 @@ export function createPrCommand(program: Command) {
       console.log(`State:        ${pullRequest.state}`);
       console.log(`Branch:       ${pullRequest.source?.branch?.name}`);
       console.log(`Description:  ${pullRequest.description}`);
+
+      const { action } = await inquirer.prompt([
+        {
+          type: "list",
+          name: "action",
+          message: "What next?",
+          choices: [
+            {
+              name: "Check out branch",
+              value: "checkout",
+            },
+            {
+              name: "Open in browser",
+              value: "open",
+            },
+          ],
+        },
+      ]);
+
+      switch (action) {
+        case "checkout":
+          checkoutPullRequest(pullRequest);
+          break;
+
+        case "open":
+          openPullRequestInBrowser(pullRequest);
+          break;
+      }
     });
 
   program
@@ -104,4 +133,14 @@ function checkoutPullRequest(pullRequest: Schema.Pullrequest): void {
     shell: true,
     stdio: "inherit",
   });
+}
+
+function openPullRequestInBrowser(pullRequest: Schema.Pullrequest): void {
+  const url = pullRequest.links?.html?.href;
+  if (url) {
+    console.log("Opening URL:", url);
+    open(url);
+  } else {
+    console.log("Pull request object is missing URL");
+  }
 }
